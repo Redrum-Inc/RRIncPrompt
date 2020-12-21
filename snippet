@@ -1,0 +1,18 @@
+StaticPopupDialogs["EXAMPLE_AAA"] = {
+		text = "Do you want the item?\nLook at the chat to see which item!\n"..msg,
+		button1 = "Roll",
+		-- button2 = "No",
+		OnAccept = function()
+			print("ACCEPTED")
+			RandomRoll(1,100)
+		end,
+		-- OnCancel = function()
+		-- 	print("PASSED")
+		-- end,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = true,
+		preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+	}
+
+	StaticPopup_Show("EXAMPLE_AAA")
