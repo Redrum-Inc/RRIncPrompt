@@ -59,15 +59,6 @@ function IncomingMessage(...)
             end
         end
     end
-    --     local internalSender=PmbUtils_GetMessageSender(messageText);
-    --     local internalReciever = PmbUtils_GetMessageReciever(messageText);
-    --     --print(PmbVars_PlayerName);
-        
-    --     if internalReciever==prefixController then
-    --         internalMessage = PmbUtils_GetMessageBody(messageText, internalSender, internalReciever);
-    --         PmbUtils_DebugPrint(addonName, string.format("%s [%s > %s] %s %s", prefix, internalSender, internalReciever, internalMessage, sender));
-    --     end
-    -- end
 end
 
 function RRP_SendAddonMessage(msg)
@@ -119,8 +110,9 @@ local function EventEnterWorld(self, event, isLogin, isReload)
     end
 
     local successfulRequest = C_ChatInfo.RegisterAddonMessagePrefix(addonChannel)
-
-    print(title.." loaded.")
+    if isLogin or isReload then
+        print(title.." loaded.")
+    end
 end
 
 local FrameEnterWorld = CreateFrame("Frame")
