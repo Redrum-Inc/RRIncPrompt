@@ -1,5 +1,22 @@
 local addonChannel = "RRIncPrompt"
 
+
+
+-- local UIConfig = CreateFrame("Frame", "RRIncPrompt", UIParent, "BasicFrameTemplateWithInset")
+-- UIConfig:SetSize(300, 360)
+-- UIConfig:SetPoint("TOP", UIParent, "TOP", 0, -100) -- point, relativeFrame, relativePoint, xOffset, yOffset
+-- UIConfig.title = UIConfig:CreateFontString(nil, "OVERLAY")
+-- UIConfig.title:SetFontObject("GameFontHighlight")
+-- UIConfig.title:SetPoint("LEFT", UIConfig.TitleBg, "LEFT", 5, 0)
+-- UIConfig.title:SetText("RRInc Prompt Options")
+
+-- UIConfig.btnOptionShowRollPopup = CreateFrame("CheckButton", nil, UIConfig, "InterfaceOptionsCheckButtonTemplate")
+-- UIConfig.btnOptionShowRollPopup:SetPoint("CENTER", UIConfig, "TOP", 0, -80)
+-- UIConfig.btnOptionShowRollPopup:SetSize(40, 40)
+-- UIConfig.btnOptionShowRollPopup:SetText("Show roll popup:")
+-- UIConfig.btnOptionShowRollPopup:SetNormalFontObject("GameFontNormalLarge")
+-- UIConfig.btnOptionShowRollPopup:SetHighlightFontObject("GameFontHighlightLarge")
+
 function PromptLootNext(item)
     StaticPopupDialogs["RRIncPrompt_Loot"] = {
 		text = "Next in line for:\n\n"..item.."\n\nDo you want it?",
@@ -30,7 +47,7 @@ function PromptLootRoll(item)
 		timeout = 0,
 		whileDead = true,
 		hideOnEscape = true,
-		preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+		preferredIndex = 3,
 	}
 
 	StaticPopup_Show("RRIncPrompt_Loot")
@@ -41,7 +58,6 @@ function IncomingMessage(...)
 
     local prefix=arg3;	
     local messageText = arg4;
-    --print(arg5);
     local sender = arg6;    
 
     if prefix==addonChannel then        
@@ -77,12 +93,18 @@ SLASH_RRINCPROMPT2 = '/rrp'
 function SlashCmdList.RRINCPROMPT(msg)
     local option, value = strsplit(" ",msg)	
     
-    local playerName = select(6, GetPlayerInfoByGUID(UnitGUID("player")))
+    -- local playerName = select(6, GetPlayerInfoByGUID(UnitGUID("player")))
     
-    print(C_ChatInfo.IsAddonMessagePrefixRegistered(addonChannel))
-    if(msg~=nil and msg~="") then
-        RRP_SendAddonMessage(msg)
-    end
+    -- print(C_ChatInfo.IsAddonMessagePrefixRegistered(addonChannel))
+    -- if(msg~=nil and msg~="") then
+    --     RRP_SendAddonMessage(msg)
+    -- end
+
+    if ( not InterfaceOptionsFrame:IsShown() ) then
+		InterfaceOptionsFrame:Show();
+	end
+
+    InterfaceOptionsFrame_OpenToCategory(MyAddon.panel);
 end
 
 local function EventEnterWorld(self, event, isLogin, isReload)
