@@ -1,22 +1,5 @@
 local addonChannel = "RRIncPrompt"
 
-
-
--- local UIConfig = CreateFrame("Frame", "RRIncPrompt", UIParent, "BasicFrameTemplateWithInset")
--- UIConfig:SetSize(300, 360)
--- UIConfig:SetPoint("TOP", UIParent, "TOP", 0, -100) -- point, relativeFrame, relativePoint, xOffset, yOffset
--- UIConfig.title = UIConfig:CreateFontString(nil, "OVERLAY")
--- UIConfig.title:SetFontObject("GameFontHighlight")
--- UIConfig.title:SetPoint("LEFT", UIConfig.TitleBg, "LEFT", 5, 0)
--- UIConfig.title:SetText("RRInc Prompt Options")
-
--- UIConfig.btnOptionShowRollPopup = CreateFrame("CheckButton", nil, UIConfig, "InterfaceOptionsCheckButtonTemplate")
--- UIConfig.btnOptionShowRollPopup:SetPoint("CENTER", UIConfig, "TOP", 0, -80)
--- UIConfig.btnOptionShowRollPopup:SetSize(40, 40)
--- UIConfig.btnOptionShowRollPopup:SetText("Show roll popup:")
--- UIConfig.btnOptionShowRollPopup:SetNormalFontObject("GameFontNormalLarge")
--- UIConfig.btnOptionShowRollPopup:SetHighlightFontObject("GameFontHighlightLarge")
-
 function PromptLootNext(item)
     StaticPopupDialogs["RRIncPrompt_Loot"] = {
 		text = "Next in line for:\n\n"..item.."\n\nDo you want it?",
@@ -30,11 +13,17 @@ function PromptLootNext(item)
 		end,
 		timeout = 0,
 		whileDead = true,
-		hideOnEscape = true,
+		hideOnEscape = rripOptionAllowEscape,
 		preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
-	}
+    }
+    
+    if not InCombatLockdown() then
+        StaticPopup_Show("RRIncPrompt_Loot")
+    end
 
-	StaticPopup_Show("RRIncPrompt_Loot")
+    if InCombatLockdown() and rripOptionShowPopupsDuringCombat then
+        StaticPopup_Show("RRIncPrompt_Loot")
+    end
 end
 
 function PromptLootRoll(item)
@@ -46,11 +35,19 @@ function PromptLootRoll(item)
 		end,
 		timeout = 0,
 		whileDead = true,
-		hideOnEscape = true,
+		hideOnEscape = rripOptionAllowEscape,
 		preferredIndex = 3,
 	}
 
-	StaticPopup_Show("RRIncPrompt_Loot")
+    if rripOptionShowRollPopup then
+        if not InCombatLockdown() then
+            StaticPopup_Show("RRIncPrompt_Loot")
+        end
+
+        if InCombatLockdown() and rripOptionShowPopupsDuringCombat then
+            StaticPopup_Show("RRIncPrompt_Loot")
+        end
+    end
 end
 
 function IncomingMessage(...)
@@ -111,29 +108,47 @@ local function EventEnterWorld(self, event, isLogin, isReload)
     local title = GetAddOnMetadata("RRIncPrompt", "Title")
     local version = GetAddOnMetadata("RRIncPrompt", "Version")
 
-    if(RRIncPrompt == nil) then
-        print(title..": Setting defaults.")
-        RRIncPrompt = {}
-        RRIncPrompt.Settings = {
-            optionShowRollPopup = true,
-            optionShowPopupsDuringCombat = true
-        }
-    else
-        if RRIncPrompt.Settings.optionShowRollPopup == nil then
-            RRIncPrompt.Settings.optionShowRollPopup = true
-        end
+    -- if(RRIncPrompt == nil) then
+    --     print(title..": Setting defaults.")
+    --     RRIncPrompt = {}
+    --     if RRIncPrompt.Settings == nil then
+    --         RRIncPrompt.Settings = {
+    --             optionShowRollPopup = true,
+    --             optionShowPopupsDuringCombat = true,
+    --             optionAllowEscape = true
+    --         }
+    --     end
+    -- else
+    --     if RRIncPrompt.Settings.optionShowRollPopup == nil then
+    --         RRIncPrompt.Settings.optionShowRollPopup = true
+    --     end
 
-        if RRIncPrompt.Settings.optionShowPopupsDuringCombat == nil then
-            RRIncPrompt.Settings.optionShowPopupsDuringCombat = true
-        end
+    --     if RRIncPrompt.Settings.optionShowPopupsDuringCombat == nil then
+    --         RRIncPrompt.Settings.optionShowPopupsDuringCombat = true
+    --     end
 
-        -- print(title..": optionShowRollPopup == "..tostring(RRIncPrompt.Settings.optionShowRollPopup))
-        -- print(title..": optionShowPopupsDuringCombat == "..tostring(RRIncPrompt.Settings.optionShowPopupsDuringCombat))
-    end
+    --     if RRIncPrompt.Settings.optionAllowEscape == nil then
+    --         RRIncPrompt.Settings.optionAllowEscape = true
+    --     end
+
+    --     print(RRIncPrompt.Settings.optionShowRollPopup, RRIncPrompt.Settings.optionShowPopupsDuringCombat, RRIncPrompt.Settings.optionAllowEscape)
+
+    --     -- print(title..": optionShowRollPopup == "..tostring(RRIncPrompt.Settings.optionShowRollPopup))
+    --     -- print(title..": optionShowPopupsDuringCombat == "..tostring(RRIncPrompt.Settings.optionShowPopupsDuringCombat))
+    -- end
 
     local successfulRequest = C_ChatInfo.RegisterAddonMessagePrefix(addonChannel)
     if isLogin or isReload then
-        print(title.." loaded.")
+        if rripOptionShowRollPopup == nil then
+            rripOptionShowRollPopup = true
+        end
+        if rripOptionShowPopupsDuringCombat == nil then
+            rripOptionShowPopupsDuringCombat = true
+        end
+        if rripOptionAllowEscape == nil then
+            rripOptionAllowEscape = false
+        end
+        print(title.." v"..version.." loaded.")
     end
 end
 

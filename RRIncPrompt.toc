@@ -1,10 +1,10 @@
 ## Interface: 11306
-## Version: 1
+## Version: 2
 ## Title: |cFF323232RR|r|cFF7F7F7FInc|r |cFF6B0B0BPrompt|r
 ## Notes: Addon for RR Inc on EU-ZandalarTribe. By |cFF6600CCPug|r.
 ## Author: Pug
 ## DefaultState: enabled
-## SavedVariables: RRIncPrompt
+## SavedVariables: rripOptionShowRollPopup, rripOptionShowPopupsDuringCombat, rripOptionAllowEscape
 
 Libraries\Load_Libraries.xml
 optionsGUI.lua
