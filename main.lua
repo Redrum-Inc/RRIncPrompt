@@ -50,6 +50,30 @@ function PromptLootRoll(item)
     end
 end
 
+function PromptLootFFA(item)
+    StaticPopupDialogs["RRIncPrompt_Loot"] = {
+		text = "FFA:\n\n"..item,
+		button1 = "Roll",
+		OnAccept = function()
+			RandomRoll(1,100)
+		end,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = rripOptionAllowEscape,
+		preferredIndex = 3,
+	}
+
+    if rripOptionShowFFA then
+        if not InCombatLockdown() then
+            StaticPopup_Show("RRIncPrompt_Loot")
+        end
+
+        if InCombatLockdown() and rripOptionShowPopupsDuringCombat then
+            StaticPopup_Show("RRIncPrompt_Loot")
+        end
+    end
+end
+
 function IncomingMessage(...)
     local arg1, arg2, arg3, arg4, arg5, arg6 = ...
 
@@ -71,6 +95,13 @@ function IncomingMessage(...)
                 PromptLootRoll(item)
             end
         end
+
+        if playerName == "all" then
+            if action == "ffa" then
+                PromptLootFFA(item)
+            end
+        end
+        
     end
 end
 

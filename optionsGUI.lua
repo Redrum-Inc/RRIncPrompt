@@ -16,6 +16,13 @@ myOptionsTable = {
         type = "toggle",
         set = function(info,val) rripOptionShowRollPopup = val end,
         get = function(info) return rripOptionShowRollPopup  end
+    },
+    optionShowFFA = {
+        name = "FFA popup",
+        desc = "Shows popup when FFA roll is announced.",
+        type = "toggle",
+        set = function(info,val) rripOptionShowFFA = val end,
+        get = function(info) return rripOptionShowFFA  end
 	},
 	optionShowDuringCombat = {
         name = "In combat",
