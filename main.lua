@@ -96,7 +96,7 @@ function IncomingMessage(...)
             end
         end
 
-        if playerName == "all" then
+        if targetPlayer == "all" then
             if action == "ffa" then
                 PromptLootFFA(item)
             end
