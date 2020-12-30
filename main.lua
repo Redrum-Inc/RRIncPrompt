@@ -53,9 +53,12 @@ end
 function PromptLootFFA(item)
     StaticPopupDialogs["RRIncPrompt_Loot"] = {
 		text = "FFA:\n\n"..item,
-		button1 = "Roll",
+        button1 = "Roll",
+        button2 = "Skip",
 		OnAccept = function()
 			RandomRoll(1,100)
+        end,
+        OnCancel = function()			
 		end,
 		timeout = 0,
 		whileDead = true,
